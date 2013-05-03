@@ -1,5 +1,6 @@
 
 import serial
+import time
 
 class TMCLError(Exception):
     pass
@@ -248,7 +249,7 @@ class TMCLDevice(object):
     def _query(self, request):
         req = encodeRequestCommand(*request)
         if self._debug:
-            print "send to TMCL: ", req
+            print "send to TMCL: ", request
         self._ser.write(req)
         rep = decodeReplyCommand(self._ser.read(9))
         if self._debug:
@@ -569,7 +570,7 @@ class TMCLDevice(object):
         pn, v = self._pn_checkrange(parameter_number, value, "SAP: ")
         status, value = self._query((0x01, cn, pn, mn, v))
         if status != STAT_OK:
-            raise TMCLError("SAP: got status "+STATUSCODES[status])
+            raise TMCLError("SAP: got status " + STATUSCODES[status])
         return None 
         
     def gap(self, motor_number, parameter_number):
